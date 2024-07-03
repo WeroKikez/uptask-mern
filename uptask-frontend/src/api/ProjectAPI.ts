@@ -1,5 +1,6 @@
 import api from "@/lib/axios";
 import { ProjectFormData } from "@/types/index";
+import { isAxiosError } from "axios";
 
 
 export async function createProject(project: ProjectFormData) {
@@ -9,6 +10,10 @@ export async function createProject(project: ProjectFormData) {
             return 'Proyecto Creado Exitosamente'
         }
     } catch (error) {
-        console.error(error)
+        if(isAxiosError(error) && error.response) {
+            const errorMessage = error.response.status === 404 ? new Error('Proyecto No Encontrado') : new Error(error.response.data.error)
+            
+            throw errorMessage
+        }
     }
 }
