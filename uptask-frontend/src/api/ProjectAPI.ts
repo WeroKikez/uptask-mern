@@ -39,7 +39,9 @@ export async function getProjectById(id : Project['_id']) {
         return data
     } catch (error) {
         if(isAxiosError(error) && error.response) {
-            throw new Error(error.response.data.error)
+            const errorMessage = error.response.status === 404 ? new Error('Proyecto No Encontrado') : new Error(error.response.data.error)
+            
+            throw errorMessage
         }
     }
 }
@@ -55,6 +57,22 @@ export async function updateProject({formData, projectId} : ProjectAPIType) {
         
         if(data.status === 200) {
             return 'Proyecto Actualizado Exitosamente'
+        }
+    } catch (error) {
+        if(isAxiosError(error) && error.response) {
+            const errorMessage = error.response.status === 404 ? new Error('Proyecto No Encontrado') : new Error(error.response.data.error)
+            
+            throw errorMessage
+        }
+    }
+}
+
+export async function deleteProject(id : Project['_id']) {
+    try {
+        const data = await api.delete(`/projects/${id}`)
+        
+        if(data.status === 200) {
+            return 'Proyecto Eliminado Exitosamente'
         }
     } catch (error) {
         if(isAxiosError(error) && error.response) {

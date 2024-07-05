@@ -1,16 +1,30 @@
 import { Link } from "react-router-dom"
-import { useQuery } from '@tanstack/react-query'
-import { getProjects } from "@/api/ProjectAPI"
+import { useQuery, useQueryClient } from '@tanstack/react-query'
+import { deleteProject, getProjects } from "@/api/ProjectAPI"
+import { useMutation } from "@tanstack/react-query"
 
 import { Fragment } from 'react'
 import { Menu, Transition } from '@headlessui/react'
 import { EllipsisVerticalIcon } from '@heroicons/react/20/solid'
+import { toast } from "react-toastify"
 
 const DashboardView = () => {
   
   const { data, isLoading } = useQuery({
     queryKey: ['projects'],
     queryFn: getProjects
+  })
+
+  const queryClient = useQueryClient()
+  const { mutate } = useMutation({
+    mutationFn: deleteProject,
+    onError: (error) => {
+        toast.error(error.message)
+    },
+    onSuccess: (data) => {
+        queryClient.invalidateQueries({ queryKey: ['projects'] })
+        toast.success(data)
+    }
   })
 
   if(isLoading) return 'Cargando...'
@@ -33,7 +47,7 @@ const DashboardView = () => {
             <li key={project._id} className="flex justify-between gap-x-6 px-5 py-10">
                 <div className="flex min-w-0 gap-x-4">
                     <div className="min-w-0 flex-auto space-y-2">
-                        <Link to={``}
+                        <Link to={`/projects/${project._id}`}
                             className="text-gray-600 cursor-pointer hover:underline text-3xl font-bold"
                         >{project.projectName}</Link>
                         <p className="text-sm text-gray-400">
@@ -58,7 +72,7 @@ const DashboardView = () => {
                                 className="absolute right-0 z-10 mt-2 w-56 origin-top-right rounded-md bg-white py-2 shadow-lg ring-1 ring-gray-900/5 focus:outline-none"
                             >
                                     <Menu.Item>
-                                        <Link to={``}
+                                        <Link to={`/projects/${project._id}`}
                                             className='block px-3 py-1 text-sm leading-6 text-gray-900'>
                                         Ver Proyecto
                                         </Link>
@@ -73,7 +87,7 @@ const DashboardView = () => {
                                         <button 
                                             type='button' 
                                             className='block px-3 py-1 text-sm leading-6 text-red-500'
-                                            onClick={() => {} }
+                                            onClick={() => mutate(project._id) }
                                         >
                                             Eliminar Proyecto
                                         </button>
