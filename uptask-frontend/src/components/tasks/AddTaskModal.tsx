@@ -35,8 +35,7 @@ export default function AddTaskModal() {
             toast.error(error.message)
         },
         onSuccess: ( response ) => {
-            queryClient.invalidateQueries({ queryKey: ['editProject', projectId] })
-            console.log('queyclient invalidado')
+            queryClient.invalidateQueries({ queryKey: ['project', projectId] })
             toast.success(response)
             reset()
             navigate(location.pathname, {replace: true} )
