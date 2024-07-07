@@ -4,6 +4,7 @@ import { getProjectById } from "@/api/ProjectAPI"
 import AddTaskModal from "@/components/tasks/AddTaskModal"
 import TaskList from "@/components/tasks/TaskList"
 import EditTaskData from "@/components/tasks/EditTaskData"
+import TaskDetailsModal from "@/components/tasks/TaskDetailsModal"
 
 const ProjectDetailsView = () => {
   const navigate = useNavigate()
@@ -38,7 +39,8 @@ const ProjectDetailsView = () => {
         />
 
         <AddTaskModal />
-        <EditTaskData />
+        <EditTaskData /> {/* -> renders a modal when data (editTaskModal) */}
+        <TaskDetailsModal />
     </>
   )
 }
