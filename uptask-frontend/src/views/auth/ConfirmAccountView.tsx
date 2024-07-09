@@ -18,7 +18,11 @@ export default function ConfirmAccountView() {
     },
     onSuccess: ( response ) => {
         toast.success(response)
-        navigate('/auth/login')
+        
+        // My code for redirect to login
+        setTimeout(() => {
+          navigate('/auth/login')
+        }, 2000);
     }
   })
 
@@ -61,7 +65,7 @@ export default function ConfirmAccountView() {
 
       <nav className="mt-10 flex flex-col space-y-4">
         <Link
-          to='/auth/new-code'
+          to='/auth/request-code'
           className="text-center text-gray-300 font-normal"
         >
           Solicitar un nuevo Código
