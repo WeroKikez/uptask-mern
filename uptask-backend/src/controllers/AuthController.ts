@@ -114,7 +114,7 @@ export class AuthController {
             // Check if user already exist
             const user = await User.findOne({ email })
             if(!user) {
-                const error = new Error('El usuario ya esta registrado')
+                const error = new Error('El usuario no esta registrado')
                 return res.status(404).json( { error: error.message } )
             }
 
@@ -136,6 +136,37 @@ export class AuthController {
             })
             
             await Promise.allSettled( [user.save(), token.save()] )
+            res.send('Token enviado, revisa tu email')
+        } catch (error) {
+            res.status(500).json({ error: 'Hubo un Error' })
+        }
+    }
+
+    static forgotPassword = async (req : Request, res : Response) => {
+        try {
+            const { email } = req.body
+
+            // Check if user already exist
+            const user = await User.findOne({ email })
+            if(!user) {
+                const error = new Error('El usuario no esta registrado')
+                return res.status(404).json( { error: error.message } )
+            }
+          
+            // Generate token
+            const token = new Token()
+            token.token = generateToken()
+            token.user = user.id
+            
+            await token.save()
+
+            // Enviar email
+            AuthEmail.sendPasswordResetToken( {
+                email: user.email,
+                name: user.name,
+                token: token.token
+            })
+            
             res.send('Token enviado, revisa tu email')
         } catch (error) {
             res.status(500).json({ error: 'Hubo un Error' })
