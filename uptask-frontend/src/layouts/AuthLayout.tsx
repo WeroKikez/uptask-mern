@@ -1,5 +1,5 @@
 import Logo from "@/components/Logo"
-import { Outlet } from "react-router-dom"
+import { Link, Outlet } from "react-router-dom"
 import { ToastContainer } from "react-toastify";
 
 const AuthLayout = () => {
@@ -7,7 +7,7 @@ const AuthLayout = () => {
     <>
     <div className="bg-gray-800 min-h-screen">
         <div className="py-10 lg:py-20 mx-auto w-[550px]">
-            <Logo />
+            <Link to="/"><Logo /></Link>
             <div className="mt-10">
 
                 <Outlet />
