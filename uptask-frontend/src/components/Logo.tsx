@@ -1,6 +1,6 @@
 const Logo = () => {
   return (
-    <img src="/logo.svg" alt="Uptask Logo"/>
+    <img className="max-w-96 mx-auto" src="/logo.svg" alt="Uptask Logo"/>
   )
 }
 
