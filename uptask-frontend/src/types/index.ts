@@ -18,6 +18,16 @@ export type NewPasswordForm = Pick<Auth, 'password' | 'password_confirmation'>
 
 export type ConfirmToken = Pick<Auth, 'token'>
 
+/* USERS */
+export const userSchmea = authSchema.pick({
+    name: true,
+    email: true
+}).extend({
+    _id: z.string()
+})
+
+export type User = z.infer<typeof userSchmea>
+
 /* TASKS */
 export const taskStatusSchema = z.enum(['pending', 'onHold', 'inProgress', 'underReview', 'completed'])
 export type TaskStatus = z.infer<typeof taskStatusSchema>
