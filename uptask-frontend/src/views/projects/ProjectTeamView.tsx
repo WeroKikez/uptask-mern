@@ -1,10 +1,11 @@
 import { Fragment } from "react/jsx-runtime"
 import { Menu, Transition } from '@headlessui/react'
 import { EllipsisVerticalIcon } from '@heroicons/react/20/solid'
-import { getTeam } from "@/api/TeamAPI"
+import { getTeam, removeMemberFromProject } from "@/api/TeamAPI"
 import AddMemberModal from "@/components/team/AddMemberModal"
-import { useQuery } from "@tanstack/react-query"
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { useNavigate, Link, useParams, Navigate } from "react-router-dom"
+import { toast } from "react-toastify"
 
 const ProjectTeamView = () => {
   const navigate = useNavigate() 
@@ -14,6 +15,18 @@ const ProjectTeamView = () => {
   const { data, isLoading, isError } = useQuery({
     queryKey: ['projectTeam', projectId],
     queryFn: () => getTeam(projectId),
+  })
+
+  const queryClient = useQueryClient()
+  const { mutate } = useMutation({
+    mutationFn: removeMemberFromProject,
+    onError: ( error ) => {
+      toast.error(error.message)
+    },
+    onSuccess: ( response ) => {
+      toast.success(response)
+      queryClient.invalidateQueries({ queryKey: ['projectTeam', projectId] })
+    }
   })
 
   if(isLoading) return 'Cargando...'
@@ -72,6 +85,7 @@ const ProjectTeamView = () => {
                                                 <button
                                                     type='button'
                                                     className='block px-3 py-1 text-sm leading-6 text-red-500'
+                                                    onClick={() => mutate({ projectId, userId: member._id})}
                                                 >
                                                     Eliminar del Proyecto
                                                 </button>
