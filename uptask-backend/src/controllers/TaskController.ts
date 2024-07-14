@@ -1,6 +1,7 @@
 import type { Request, Response } from 'express'
 import Task from '../models/Task'
 import e from 'express'
+import { selectFields } from 'express-validator/lib/field-selection'
 
 export class TaskController {
     static createTask = async (req : Request, res : Response) => {
@@ -33,7 +34,10 @@ export class TaskController {
 
     static getTaskById = async (req : Request, res : Response) => {
         try {
-            res.json(req.task)
+            const task = await Task.findById(req.task.id)
+                                .populate({path: 'completedBy', select: 'id name email'})
+
+            res.json(task)
         } catch (error) {
             res.status(500).json({ error: error.message })
         }
