@@ -9,7 +9,7 @@ export class TaskController {
 
             task.project = req.project.id
             req.project.tasks.push(task.id)
-
+            
             await Promise.allSettled([[task.save(), req.project.save()]])
             
             res.send('Task created successfully')
@@ -69,7 +69,7 @@ export class TaskController {
 
             const { status } = req.body
             req.task.status = status
-
+            req.task.completedBy = status === 'pending' ? null : req.user.id
             await req.task.save()
             res.send('Task status updated successfully')
         } catch (error) {

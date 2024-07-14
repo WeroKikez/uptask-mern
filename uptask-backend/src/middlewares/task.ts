@@ -41,7 +41,7 @@ export async function taskBelongsToProject(req : Request, res : Response, next :
 
 export async function hasAutorization(req : Request, res : Response, next : NextFunction) {
     try {
-        if(req.user.id.toString !== req.project.manager.toString()) {
+        if(req.user.id.toString() !== req.project.manager.toString()) {
             const error = new Error('Acción No Válida')
             return res.status(400).json({ error: error.message })
         }
