@@ -17,6 +17,7 @@ export default function LoginView() {
 
   const { mutate } = useMutation({
     mutationFn: login,
+    retry: false,
     onError: (error) => {
       toast.error(error.message)
     },

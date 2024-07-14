@@ -46,8 +46,10 @@ export async function login( formData : UserLoginForm ) {
         return data
     } catch (error) {
         if(isAxiosError(error) && error.response) {
+            console.log('Axios error')
             throw new Error(error.response.data.error)
         }
+        throw new Error('Ha habido un Error, Intente de nuevo Más Tarde')
     }
 }
 
