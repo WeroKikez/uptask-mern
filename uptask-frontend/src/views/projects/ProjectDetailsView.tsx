@@ -7,6 +7,7 @@ import EditTaskData from "@/components/tasks/EditTaskData"
 import TaskDetailsModal from "@/components/tasks/TaskDetailsModal"
 import { useAuth } from "@/hooks/useAuth"
 import { isManager } from "@/utils/policies"
+import { useMemo } from "react"
 
 const ProjectDetailsView = () => {
   const { data: user, isLoading : authLoading} = useAuth()
@@ -22,8 +23,11 @@ const ProjectDetailsView = () => {
     retry: false
   })
 
+  const canEdit = useMemo(() => data?.manager === user?._id, [data, user]) 
+
   if(isLoading && authLoading) return 'Cargando...'
   if(isError) return <Navigate to="/404"/>
+
   
   if(data && user) return (
     <>
