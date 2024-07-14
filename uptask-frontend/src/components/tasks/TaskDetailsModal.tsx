@@ -7,6 +7,7 @@ import { toast } from 'react-toastify';
 import { formatDate } from '@/utils/utils';
 import { statusTranslations } from '@/locales/es';
 import { TaskStatus } from '@/types/index';
+import { statusBackgroundColors, statusBorderColors, statusTextColors } from '@/locales/colours';
 
 export default function TaskDetailsModal() {
     const projectId = useParams().projectId!
@@ -90,6 +91,23 @@ export default function TaskDetailsModal() {
                                         className="font-black text-4xl text-slate-600 my-5"
                                     >{data.name}</Dialog.Title>
                                     <p className='text-lg text-slate-500 mb-2'>Descripción: {data.description}</p>
+
+                                    <p className='text-lg text-slate-500 mb-2'>Historial de Cambios</p>
+                                    
+                                    <ul className='list-decimal'>
+                                    {data.completedBy.map( (actiityLog) => (
+                                        <li className='flex gap-5 mt-2 text-center' key={actiityLog._id}>
+                                            <div className={`align-middle text-center w-[150px] rounded-lg border-2 ${statusBorderColors[actiityLog.status]} ${statusBackgroundColors[actiityLog.status]}`}>
+                                                <span 
+                                                    className={`font-bold uppercase text-sm px-5 py-1 ${statusTextColors[actiityLog.status]}`}
+                                                >{statusTranslations[actiityLog.status]}</span>
+                                            </div>
+                                            
+                                            <p className=''>{actiityLog.user.name}</p>
+                                        </li>
+                                    ))}
+                                    </ul>
+
                                     <div className='my-5 space-y-3'>
                                         <label className='font-bold'>Estado Actual:</label>
 

@@ -30,10 +30,10 @@ export async function getTaskById({projectId, taskId} : Pick<TaskAPI, 'projectId
         const url = `/projects/${projectId}/task/${taskId}`
         const { data } = await api(url)
         const response = taskSchema.safeParse(data)
-        
         if(response.success) {
             return response.data
         }
+
     } catch (error) {
         if(isAxiosError(error) && error.response) {
             const errorMessage = error.response.status === 404 ? new Error('Tarea No Encontrada') : new Error('Error al cargar la Tarea')

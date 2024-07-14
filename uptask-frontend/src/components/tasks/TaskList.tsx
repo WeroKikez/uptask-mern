@@ -1,6 +1,7 @@
 import { Task } from "@/types/index";
 import TaskCard from "./TaskCard";
 import { statusTranslations } from "@/locales/es";
+import { statusBorderTColors } from "@/locales/colours";
 
 type TaskListProps = {
     tasks: Task[],
@@ -19,14 +20,6 @@ const initialStatusGroups : GroupedTasks = {
     completed: []
 }
 
-const statusColors : {[key: string] : string} = {
-    pending: 'border-t-slate-500',
-    onHold: 'border-t-red-500',
-    inProgress: 'border-t-blue-500',
-    underReview: 'border-t-amber-500',
-    completed: 'border-t-emerald-500'
-}
-
 const TaskList = ({tasks, canEdit} : TaskListProps) => {
     const groupedTasks = tasks.reduce((acc, task) => {
         let currentGroup = acc[task.status] ? [...acc[task.status]] : [];
@@ -42,7 +35,7 @@ const TaskList = ({tasks, canEdit} : TaskListProps) => {
         {Object.entries(groupedTasks).map(([status, tasks]) => (
             <div key={status} className='min-w-[300px] 2xl:min-w-0 2xl:w-1/5'>
                 <h3 
-                    className={`capitalize text-xl font-light border border-slate-300 bg-white p-3 border-t-8 ${statusColors[status]}`}
+                    className={`capitalize text-xl font-light border border-slate-300 bg-white p-3 border-t-8 ${statusBorderTColors[status]}`}
                 >{statusTranslations[status]}</h3>
 
                 <ul className='mt-5 space-y-5'>

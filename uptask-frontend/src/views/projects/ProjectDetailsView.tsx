@@ -53,6 +53,7 @@ const ProjectDetailsView = () => {
 
         <TaskList 
           tasks={data.tasks}
+          canEdit={canEdit}
         />
 
         <AddTaskModal />
