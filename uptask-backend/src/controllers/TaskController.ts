@@ -73,7 +73,12 @@ export class TaskController {
 
             const { status } = req.body
             req.task.status = status
-            req.task.completedBy = status === 'pending' ? null : req.user.id
+            const data = {
+                user: req.user.id,
+                status
+            }
+
+            req.task.completedBy.push(data)
             await req.task.save()
             res.send('Task status updated successfully')
         } catch (error) {
