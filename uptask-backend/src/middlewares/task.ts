@@ -38,3 +38,15 @@ export async function taskBelongsToProject(req : Request, res : Response, next :
         res.status(500).json({ msg : error.message })
     }
 }
+
+export async function hasAutorization(req : Request, res : Response, next : NextFunction) {
+    try {
+        if(req.user.id.toString !== req.project.manager.toString()) {
+            const error = new Error('Acción No Válida')
+            return res.status(400).json({ error: error.message })
+        }
+        next()
+    } catch (error) {
+        res.status(500).json({ msg : error.message })
+    }
+}
