@@ -8,6 +8,7 @@ import { formatDate } from '@/utils/utils';
 import { statusTranslations } from '@/locales/es';
 import { TaskStatus } from '@/types/index';
 import { statusBackgroundColors, statusBorderColors, statusTextColors } from '@/locales/colours';
+import NotesPanel from '../notes/NotesPanel';
 
 export default function TaskDetailsModal() {
     const projectId = useParams().projectId!
@@ -90,23 +91,27 @@ export default function TaskDetailsModal() {
                                         as="h3"
                                         className="font-black text-4xl text-slate-600 my-5"
                                     >{data.name}</Dialog.Title>
-                                    <p className='text-lg text-slate-500 mb-2'>Descripción: {data.description}</p>
+                                    <p className='text-lg text-slate-500 mb-2'><span className='font-bold'>Descripción:</span> {data.description}</p>
 
-                                    <p className='text-lg text-slate-500 mb-2'>Historial de Cambios</p>
-                                    
-                                    <ul className='list-decimal'>
-                                    {data.completedBy.map( (actiityLog) => (
-                                        <li className='flex gap-5 mt-2 text-center' key={actiityLog._id}>
-                                            <div className={`align-middle text-center w-[150px] rounded-lg border-2 ${statusBorderColors[actiityLog.status]} ${statusBackgroundColors[actiityLog.status]}`}>
-                                                <span 
-                                                    className={`font-bold uppercase text-sm px-5 py-1 ${statusTextColors[actiityLog.status]}`}
-                                                >{statusTranslations[actiityLog.status]}</span>
-                                            </div>
+                                    {data.completedBy.length > 0 && (
+                                        <>
+                                            <p className='font-bold mt-4 mb-2'>Historial de Cambios</p>
                                             
-                                            <p className=''>{actiityLog.user.name}</p>
-                                        </li>
-                                    ))}
-                                    </ul>
+                                            <ul className='list-decimal'>
+                                            {data.completedBy.map( (actiityLog) => (
+                                                <li className='flex gap-5 mt-2 text-center' key={actiityLog._id}>
+                                                    <div className={`align-middle text-center w-[150px] rounded-lg border-2 ${statusBorderColors[actiityLog.status]} ${statusBackgroundColors[actiityLog.status]}`}>
+                                                        <span 
+                                                            className={`font-bold uppercase text-sm px-5 py-1 ${statusTextColors[actiityLog.status]}`}
+                                                        >{statusTranslations[actiityLog.status]}</span>
+                                                    </div>
+                                                    
+                                                    <p className=''>{actiityLog.user.name}</p>
+                                                </li>
+                                            ))}
+                                            </ul>
+                                        </>
+                                    )}
 
                                     <div className='my-5 space-y-3'>
                                         <label className='font-bold'>Estado Actual:</label>
@@ -121,6 +126,8 @@ export default function TaskDetailsModal() {
                                             ) )}
                                         </select>
                                     </div>
+
+                                    <NotesPanel notes={data.notes} />
                                 </Dialog.Panel>
                             </Transition.Child>
                         </div>
