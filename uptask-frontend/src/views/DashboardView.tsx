@@ -1,33 +1,22 @@
-import { Link } from "react-router-dom"
-import { useQuery, useQueryClient } from '@tanstack/react-query'
-import { deleteProject, getProjects } from "@/api/ProjectAPI"
-import { useMutation } from "@tanstack/react-query"
-
+import { Link, useLocation, useNavigate } from "react-router-dom"
+import { useQuery } from '@tanstack/react-query'
+import { getProjects } from "@/api/ProjectAPI"
 import { Fragment } from 'react'
 import { Menu, Transition } from '@headlessui/react'
 import { EllipsisVerticalIcon } from '@heroicons/react/20/solid'
-import { toast } from "react-toastify"
 import { useAuth } from "@/hooks/useAuth"
 import { isManager } from "@/utils/policies"
+import DeleteProjectModal from "@/components/projects/DeleteProjectModal"
 
 const DashboardView = () => {
+  const location = useLocation()
+  const navigate = useNavigate()
+
   const { data: user, isLoading : authLoading} = useAuth()
   
   const { data, isLoading } = useQuery({
     queryKey: ['projects'],
     queryFn: getProjects
-  })
-
-  const queryClient = useQueryClient()
-  const { mutate } = useMutation({
-    mutationFn: deleteProject,
-    onError: (error) => {
-        toast.error(error.message)
-    },
-    onSuccess: (data) => {
-        queryClient.invalidateQueries({ queryKey: ['projects'] })
-        toast.success(data)
-    }
   })
 
   if(isLoading && authLoading) return 'Cargando...'
@@ -98,7 +87,7 @@ const DashboardView = () => {
                                             <button 
                                                 type='button' 
                                                 className='block px-3 py-1 text-sm leading-6 text-red-500'
-                                                onClick={() => mutate(project._id) }
+                                                onClick={() => navigate(location.pathname + `?deleteProject=${project._id}`) }
                                             >
                                                 Eliminar Proyecto
                                             </button>
@@ -123,6 +112,8 @@ const DashboardView = () => {
         </p>
 
       )}
+
+      <DeleteProjectModal />
     </>
   )
 }
