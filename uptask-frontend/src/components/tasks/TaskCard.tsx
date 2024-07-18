@@ -47,6 +47,8 @@ const TaskCard = ({task, canEdit, isDragOver, dragId} : TaskCardProps) => {
   return (
     <li 
         className={isDragOver || dragId !== task._id ? `p-5 bg-white border border-slate-300 flex justify-between gap-3` : ''}
+        onAuxClick={() => navigate(`/projects/${projectId}?viewTask=${task._id}`)}
+        onDoubleClick={() => navigate(`/projects/${projectId}?viewTask=${task._id}`)}
     >
         <div
             {...listeners}
