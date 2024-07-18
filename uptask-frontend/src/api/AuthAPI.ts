@@ -1,7 +1,6 @@
 import api from "@/lib/axios"
 import { isAxiosError } from "axios"
 import { CheckPasswordForm, ConfirmToken, ForgotPasswordForm, NewPasswordForm, RequestConfirmationCodeForm, UserLoginForm, UserRegistrationForm, userSchema } from "../types"
-import { ArrowDownTrayIcon } from "@heroicons/react/20/solid"
 
 export async function createAccount( formData : UserRegistrationForm ) {
     try {

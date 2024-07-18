@@ -3,16 +3,23 @@ import { EllipsisVerticalIcon } from "@heroicons/react/20/solid";
 import { Menu, Transition } from "@headlessui/react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { Task } from "@/types/index";
+import { TaskProject } from "@/types/index";
 import { deleteTask } from "@/api/TaskAPI";
 import { toast } from "react-toastify";
+import { useDraggable } from "@dnd-kit/core";
 
 type TaskCardProps = {
-    task: Task,
+    task: TaskProject,
     canEdit: boolean
+    isDragOver: boolean
+    dragId: string
 }
 
-const TaskCard = ({task, canEdit} : TaskCardProps) => {
+const TaskCard = ({task, canEdit, isDragOver, dragId} : TaskCardProps) => {
+  const { attributes, listeners, setNodeRef, transform } = useDraggable({
+    id: task._id
+  })
+
   const navigate = useNavigate()  
 
   const params = useParams()
@@ -30,17 +37,32 @@ const TaskCard = ({task, canEdit} : TaskCardProps) => {
     }
   })
 
+  const style = transform ? {
+    transform: `translate3d(${transform.x}px, ${transform.y}px, 0)`,
+    cursor: "grabbing"
+  } : {
+    cursor: "grab",
+  }
+
   return (
-    <li className="p-5 bg-white border border-slate-300 flex justify-between gap-3">
-        <div className="min-w-0 flex flex-col gap-y-4">
-            <button
-                type="button"
+    <li 
+        className={isDragOver || dragId !== task._id ? `p-5 bg-white border border-slate-300 flex justify-between gap-3` : ''}
+    >
+        <div
+            {...listeners}
+            {...attributes}
+            ref={setNodeRef}
+            style={style}
+            className={`min-w-0 flex flex-col gap-y-4 ${!isDragOver && dragId === task._id && 'p-5'} bg-white`}
+        >
+            <p
                 className="text-xl font-bold text-slate-600 text-left"
-                onClick={() => navigate(location.pathname + `?viewTask=${task._id}`)}
-            >{task.name}</button>
+            >{task.name}</p>
             <p className="text-slate-500">{task.description}</p>
         </div>
 
+        
+        {isDragOver || dragId !== task._id ? (
         <div>    
             <div className="flex shrink-0  gap-x-6">
                 <Menu as="div" className="relative flex-none">
@@ -90,6 +112,7 @@ const TaskCard = ({task, canEdit} : TaskCardProps) => {
                 </Menu>
             </div>
         </div>
+        ) : null}
     </li>
   )
 }
