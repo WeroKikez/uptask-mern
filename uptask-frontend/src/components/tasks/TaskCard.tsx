@@ -55,7 +55,7 @@ const TaskCard = ({task, canEdit, isDragOver, dragId} : TaskCardProps) => {
             {...attributes}
             ref={setNodeRef}
             style={style}
-            className={`min-w-0 flex flex-col gap-y-4 ${!isDragOver && dragId === task._id && 'p-5'} bg-white`}
+            className={`w-full flex flex-col gap-y-4 ${!isDragOver && dragId === task._id && 'p-5'} bg-white`}
         >
             <p
                 className="text-xl font-bold text-slate-600 text-left"
